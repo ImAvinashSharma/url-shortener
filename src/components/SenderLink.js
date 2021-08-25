@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { db } from "./firebase";
-import loader from "./assets/loader.gif";
+import { db } from "../firebase";
+import loader from "../assets/loader.gif";
 
 function SenderLink() {
   document.title = "Redirect";
@@ -9,7 +9,6 @@ function SenderLink() {
   const history = useHistory();
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     async function redirect() {
       const query = await db.collection("urls").where("code", "==", code);
@@ -30,6 +29,7 @@ function SenderLink() {
 
   return (
     <div className="flex items-center	justify-center h-screen">
+      <h1 className="text-center text-4xl">Transferring...</h1>
       <h1 className="text-center text-4xl">{url}</h1>
       {isLoading && <img src={loader} alt="loading..." />}
     </div>

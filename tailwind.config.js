@@ -7,6 +7,10 @@ module.exports = {
         72: "18rem",
         84: "21rem",
         96: "25rem"
+      },
+      height: {
+        sm: "96.5vh",
+        xl: "95.6vh"
       }
     }
   },

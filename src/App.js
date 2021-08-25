@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Home from "./Home";
-import SenderLink from "./SenderLink";
+import Home from "./components/Home";
+import SenderLink from "./components/SenderLink";
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/links/:code" component={SenderLink} />
+          <Route exact path="/:code" component={SenderLink} />
         </Switch>
       </Router>
     </div>
