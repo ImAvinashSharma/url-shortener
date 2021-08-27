@@ -4,6 +4,7 @@ import { db } from "../firebase";
 import IconButton from "@material-ui/core/IconButton";
 import Send from "@material-ui/icons/Send";
 import loader from "../assets/loader.gif";
+import ShortLink from "./ShortLink";
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -14,7 +15,7 @@ export default function Home() {
   shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~@");
 
   const validURL = str => {
-    var pattern = new RegExp(
+    const pattern = new RegExp(
       "^(https?:\\/\\/)?" + // protocol
         "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
         "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
@@ -31,7 +32,7 @@ export default function Home() {
       return alert("Please enter a valid URL");
     }
     setIsLoading(true);
-    await db.collection("urls").add({
+    await db.collection("urls").doc(code).set({
       url: url,
       code: code
     });
@@ -64,27 +65,5 @@ export default function Home() {
         Made with ❤️ by <a href="https://avinash-sharma.com/">Avinash Sharma</a>
       </h1>
     </>
-  );
-}
-
-function ShortLink({ code }) {
-  const setUrl = `${window.location.href}${code}`;
-
-  return (
-    <pre className="bg-black m-4 p-4 pt-5 text-white rounded-xl">
-      <code>
-        {setUrl}
-        {"  "}
-      </code>
-      <button
-        type="button"
-        className="inline-block	items-start bg-green-500 rounded-md hover:bg-green-600 text-xs text-center text-white p-1"
-        onClick={() => {
-          navigator.clipboard.writeText(setUrl);
-        }}
-      >
-        Copy
-      </button>
-    </pre>
   );
 }

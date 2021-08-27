@@ -9,6 +9,7 @@ function SenderLink() {
   const history = useHistory();
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     async function redirect() {
       const query = await db.collection("urls").where("code", "==", code);
