@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import shortid from "shortid";
 import { db } from "../firebase";
 import IconButton from "@material-ui/core/IconButton";
@@ -6,12 +6,40 @@ import Send from "@material-ui/icons/Send";
 import loader from "../assets/loader.gif";
 import ShortLink from "./ShortLink";
 
+const initialState = {
+  url: "",
+  code: shortid.generate(),
+  isPressent: false,
+  isLoading: false
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "SET_LOADING":
+      return {
+        ...state,
+        isLoading: true
+      };
+    case "TOGGEL":
+      return {
+        ...state,
+        isPressent: true,
+        isLoading: false,
+        url: ""
+      };
+    case "SET_URL":
+      return {
+        ...state,
+        url: action.payload
+      };
+    default:
+      alert("Unknown action");
+  }
+};
+
 export default function Home() {
-  const [url, setUrl] = useState("");
-  // eslint-disable-next-line
-  const [code, setCode] = useState(shortid.generate());
-  const [isPressent, setIsPressent] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~@");
 
   const validURL = str => {
@@ -28,17 +56,15 @@ export default function Home() {
   };
   const handleFormSubmit = async e => {
     e.preventDefault();
-    if (!validURL(url)) {
+    if (!validURL(state.url)) {
       return alert("Please enter a valid URL");
     }
-    setIsLoading(true);
-    await db.collection("urls").doc(code).set({
-      url: url,
-      code: code
+    dispatch({ type: "SET_LOADING" });
+    await db.collection("urls").doc(state.code).set({
+      url: state.url,
+      code: state.code
     });
-    setIsPressent(true);
-    setIsLoading(false);
-    setUrl("");
+    dispatch({ type: "TOGGEL" });
   };
 
   return (
@@ -48,17 +74,17 @@ export default function Home() {
           <h1 className="text-center text-white text-4xl mb-3">URL Shortener</h1>
           <p className="text-center text-white text-lg mb-6">Create short links easy and faster.</p>
           <div className="flex border-2 border-white shadow-xl rounded-full text-white bg-white">
-            <input className="text-black md:w-96 border-none ml-6 outline-none text-xl" type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="Enter the URL..." />
+            <input className="text-black md:w-96 border-none ml-6 outline-none text-xl" type="text" value={state.url} onChange={e => dispatch({ type: "SET_URL", payload: e.target.value })} placeholder="Enter the URL..." />
             <IconButton type="submit" color="primary">
               <Send />
             </IconButton>
           </div>
-          {isLoading && (
+          {state.isLoading && (
             <div className="flex items-center	justify-center pt-4">
               <img src={loader} width="144" height="144" alt="loading..." className="rounded-full" />
             </div>
           )}
-          <div>{isPressent && <ShortLink code={code} />}</div>
+          <div>{state.isPressent && <ShortLink code={state.code} />}</div>
         </form>
       </div>
       <h1 className="text-white text-center bg-black h-9">
