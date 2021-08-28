@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect, useRef } from "react";
 import shortid from "shortid";
 import { db } from "../firebase";
 import { reducer, validURL } from "./reducer";
@@ -12,7 +12,12 @@ const initialState = {
   isLoading: false
 };
 
-export default function Home() {
+function Home() {
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   const [state, dispatch] = useReducer(reducer, initialState);
 
   shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~@");
@@ -37,7 +42,7 @@ export default function Home() {
           <h1 className="text-center text-white text-4xl mb-3">URL Shortener</h1>
           <p className="text-center text-white text-lg mb-6">Create short links easy and faster.</p>
           <div className="flex border-2 border-white shadow-xl rounded-full text-white bg-white">
-            <input className="text-black md:w-96 border-none ml-6 outline-none text-xl" type="text" value={state.url} onChange={e => dispatch({ type: "SET_URL", payload: e.target.value })} placeholder="Enter the URL..." />
+            <input ref={inputRef} className="text-black md:w-96 md:p-2 border-none ml-6 outline-none text-xl" type="text" value={state.url} onChange={e => dispatch({ type: "SET_URL", payload: e.target.value })} placeholder="Enter the URL..." />
             <button className="flex p-3 rounded-full	 hover:bg-yellow-300 text-black" type="submit">
               Shorten URL
             </button>
@@ -56,3 +61,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Home;
