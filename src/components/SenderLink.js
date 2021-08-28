@@ -12,15 +12,21 @@ function SenderLink() {
 
   useEffect(() => {
     async function redirect() {
-      const query = await db.collection("urls").where("code", "==", code);
-      query.onSnapshot(data => {
-        if (data.empty) {
-          return history.push("/");
-        }
-        const finalData = data.docs[0].data();
-        setUrl(finalData.url);
-        window.location.replace(url);
-      });
+      const localURL = localStorage.URL;
+      if (localURL !== "undefined") {
+        const query = await db.collection("urls").where("code", "==", code);
+        query.onSnapshot(data => {
+          if (data.empty) {
+            return history.push("/");
+          }
+          const finalData = data.docs[0].data();
+          setUrl(finalData.url);
+          localStorage.URL = url;
+          window.location.replace(url);
+        });
+      } else {
+        window.location.replace(localStorage.URL);
+      }
     }
     redirect();
     return () => {
