@@ -26,11 +26,14 @@ function SenderLink() {
     return () => {
       setIsLoading(false);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
 
   return (
     <div className="flex items-center	justify-center h-screen">
       <h1 className="text-center text-4xl">Transferring...</h1>
+      <br />
+      <br />
       <h1 className="text-center text-4xl">{url}</h1>
       {isLoading && <img src={loader} alt="loading..." />}
     </div>

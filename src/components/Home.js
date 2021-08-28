@@ -1,8 +1,7 @@
 import React, { useReducer } from "react";
 import shortid from "shortid";
 import { db } from "../firebase";
-import IconButton from "@material-ui/core/IconButton";
-import Send from "@material-ui/icons/Send";
+import { reducer, validURL } from "./reducer";
 import loader from "../assets/loader.gif";
 import ShortLink from "./ShortLink";
 
@@ -13,47 +12,11 @@ const initialState = {
   isLoading: false
 };
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "SET_LOADING":
-      return {
-        ...state,
-        isLoading: true
-      };
-    case "TOGGEL":
-      return {
-        ...state,
-        isPressent: true,
-        isLoading: false,
-        url: ""
-      };
-    case "SET_URL":
-      return {
-        ...state,
-        url: action.payload
-      };
-    default:
-      alert("Unknown action");
-  }
-};
-
 export default function Home() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~@");
 
-  const validURL = str => {
-    const pattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$",
-      "i"
-    );
-    return !!pattern.test(str);
-  };
   const handleFormSubmit = async e => {
     e.preventDefault();
     if (!validURL(state.url)) {
@@ -75,9 +38,9 @@ export default function Home() {
           <p className="text-center text-white text-lg mb-6">Create short links easy and faster.</p>
           <div className="flex border-2 border-white shadow-xl rounded-full text-white bg-white">
             <input className="text-black md:w-96 border-none ml-6 outline-none text-xl" type="text" value={state.url} onChange={e => dispatch({ type: "SET_URL", payload: e.target.value })} placeholder="Enter the URL..." />
-            <IconButton type="submit" color="primary">
-              <Send />
-            </IconButton>
+            <button className="flex p-3 rounded-full	 hover:bg-yellow-300 text-black" type="submit">
+              Shorten URL
+            </button>
           </div>
           {state.isLoading && (
             <div className="flex items-center	justify-center pt-4">
