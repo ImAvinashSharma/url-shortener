@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { render } from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as Sentry from "@sentry/react";
@@ -10,5 +10,4 @@ Sentry.init({
   integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate: 1.0
 });
-
-ReactDOM.render(<App />, document.getElementById("root"));
+render(<App />, document.getElementById("root"));

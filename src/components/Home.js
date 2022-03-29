@@ -20,7 +20,7 @@ function Home() {
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~@");
+  shortid.characters("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 
   const handleFormSubmit = async e => {
     e.preventDefault();
@@ -28,10 +28,13 @@ function Home() {
       return alert("Please enter a valid URL");
     }
     dispatch({ type: "SET_LOADING" });
-    await db.collection("urls").doc(state.code).set({
-      url: state.url,
-      code: state.code
-    });
+    await db
+      .collection("urls")
+      .doc(state.code)
+      .set({
+        url: state.url,
+        code: state.code.substring(0, 5)
+      });
     dispatch({ type: "TOGGEL" });
   };
 

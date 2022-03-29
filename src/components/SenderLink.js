@@ -9,7 +9,6 @@ function SenderLink() {
   // States
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  document.title = `Redirect to ${localStorage.URL ? localStorage.URL : url}`;
 
   useEffect(() => {
     async function redirect() {
@@ -20,7 +19,6 @@ function SenderLink() {
         }
         const finalData = data.docs[0].data();
         setUrl(finalData.url);
-        localStorage.URL = url;
         window.location.replace(url);
       });
     }
@@ -35,10 +33,11 @@ function SenderLink() {
     <div className="flex items-center	justify-center h-screen">
       <h1 className="text-center text-4xl">Transferring...</h1>
       <br />
+      {url && <a href={url}>Click if link not working</a>}
       <h1 className="text-center text-4xl">{url}</h1>
       {isLoading && <img src={loader} alt="loading..." />}
     </div>
   );
 }
 
-export default React.memo(SenderLink);
+export default SenderLink;
