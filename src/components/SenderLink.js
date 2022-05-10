@@ -16,7 +16,7 @@ function SenderLink() {
 
   useEffect(() => {
     async function redirect() {
-      const response = await fetch(`http://3.110.122.59:9000/urlShort/${code}`);
+      const response = await fetch(`http://localhost:9000/urlShort/${code}`);
       const data = await response.json();
       console.log(data);
       setUrl(data.url);

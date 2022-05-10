@@ -29,7 +29,7 @@ function Home() {
     dispatch({ type: "SET_LOADING" });
     const { code, url } = state;
     (async () => {
-      const rawResponse = await fetch("http://3.110.122.59:9000/urlShort", {
+      const rawResponse = await fetch("http://localhost:9000/urlShort", {
         method: "POST",
         headers: {
           Accept: "application/json",
