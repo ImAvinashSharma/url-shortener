@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
-import { db } from "../firebase";
 import loader from "../assets/loader.gif";
 
 function SenderLink() {
   const { code } = useParams();
   const history = useHistory();
+
+  if (code === undefined) {
+    history.push("/");
+  }
+
   // States
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function redirect() {
-      const query = await db.collection("urls").where("code", "==", code);
-      query.onSnapshot(data => {
-        if (data.empty) {
-          return history.push("/");
-        }
-        const finalData = data.docs[0].data();
-        setUrl(finalData.url);
-        window.location.replace(url);
-      });
+      const response = await fetch(`http://3.110.122.59:9000/urlShort/${code}`);
+      const data = await response.json();
+      console.log(data);
+      setUrl(data.url);
+      if (response.status !== 200) {
+        return history.push("/");
+      }
+      window.location.replace(data.url);
     }
     redirect();
     return () => {

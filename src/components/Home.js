@@ -1,13 +1,12 @@
 import React, { useReducer, useEffect, useRef } from "react";
 import shortid from "shortid";
-import { db } from "../firebase";
 import { reducer, validURL } from "./reducer";
 import loader from "../assets/loader.gif";
 import ShortLink from "./ShortLink";
 
 const initialState = {
   url: "",
-  code: shortid.generate(),
+  code: shortid.generate().substring(0, 4),
   isPressent: false,
   isLoading: false
 };
@@ -28,13 +27,20 @@ function Home() {
       return alert("Please enter a valid URL");
     }
     dispatch({ type: "SET_LOADING" });
-    await db
-      .collection("urls")
-      .doc(state.code)
-      .set({
-        url: state.url,
-        code: state.code.substring(0, 5)
+    const { code, url } = state;
+    (async () => {
+      const rawResponse = await fetch("http://3.110.122.59:9000/urlShort", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code, url })
       });
+      if (rawResponse.status !== 200) {
+        alert("Invalid response");
+      }
+    })();
     dispatch({ type: "TOGGEL" });
   };
 
