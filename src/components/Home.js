@@ -11,9 +11,14 @@ const initialState = {
   isLoading: false
 };
 
+async function init() {
+  await fetch(`https://be.avinash-sharma.com/init`);
+}
+
 function Home() {
   const inputRef = useRef(null);
   useEffect(() => {
+    init();
     inputRef.current.focus();
   }, []);
 
@@ -29,7 +34,7 @@ function Home() {
     dispatch({ type: "SET_LOADING" });
     const { code, url } = state;
     (async () => {
-      const rawResponse = await fetch("http://localhost:9000/urlShort", {
+      const rawResponse = await fetch("https://be.avinash-sharma.com/url-short", {
         method: "POST",
         headers: {
           Accept: "application/json",
